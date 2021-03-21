@@ -1,122 +1,126 @@
-import React, { useState } from 'react';
+import React from 'react';
 import firebase from "firebase/app";
 import "firebase/auth";
-import "firebase/firestore";
-import firebaseConfig from './firebase.config';
+import firebaseConfig from "./firebaseConfig";
 import Header from '../Header/Header';
-import { useContext } from 'react';
-import { UserContext } from '../../App';
-import { useHistory, useLocation } from 'react-router';
-import { initializeLoginFramework, handleGoogleSignIn, handleSignOut, handleFbSignIn, createUserWithEmailAndPassword, signInWithEmailAndPassword } from './LoginForm';
+import './Login.css';
+import { useState } from 'react';
 
 firebase.initializeApp(firebaseConfig);
+if (!firebase.app.length) {
+    firebase.initializeApp({});
+} else {
+    firebase.app();
+}
 
-function Login() {
-    const [newUser, setNewUser] = useState(false);
+const Login = () => {
+    const [newAccount, setNewAccount] = useState(false);
     const [user, setUser] = useState({
         isSignedIn: false,
-        name: '',
+        name: "",
         email: '',
-        photo: ''
+        password: "",
+        error: ''
     })
-
-    initializeLoginFramework();
-
-    const [loggedInUser, setLoggedInUser] = useContext(UserContext);
-    const history = useHistory();
-    const location = useLocation();
-    let { from } = location.state || { from: { pathname: "/" } }
-
-    const googleSignIn = () => {
-        handleGoogleSignIn()
-            .then(res => {
-                handleResponse(res, true);
+    var fbProvider = new firebase.auth.FacebookAuthProvider();
+    const handleFacebookSignIn = () => {
+        firebase
+            .auth()
+            .signInWithPopup(fbProvider)
+            .then((result) => {
+                var credential = result.credential;
+                var user = result.user;
+                var accessToken = credential.accessToken;
+                console.log(user);
             })
+            .catch((error) => {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                var email = error.email;
+                var credential = error.credential;
+                console.log(errorMessage, email);
+            });
     }
-
-    const fbSignIn = () => {
-        handleFbSignIn()
-            .then(res => {
-                handleResponse(res, true);
-            })
-
-    }
-
-    const signOut = () => {
-        handleSignOut()
-            .then(res => {
-                handleResponse(res, false);
-            })
-    }
-
-    const handleResponse = (res, redirect) => {
-        setUser(res);
-        setLoggedInUser(res);
-        if (redirect) {
-            history.replace(from);
-        }
-    }
-
     const handleBlur = (e) => {
         let isFieldValid = true;
+        console.log(e.target.name, e.target.value);
         if (e.target.name === 'email') {
-            isFieldValid = /\S+@\S+\.\S+/.test(e.target.value);
+            const isFieldValid = /\S+@\S+\.\S+/.test(e.target.value);
+            console.log(isFieldValid);
         }
-        if (e.target.name === 'password') {
-            const isPasswordValid = e.target.value.length > 6;
-            const passwordHasNumber = /\d{1}/.test(e.target.value);
-            isFieldValid = isPasswordValid && passwordHasNumber;
+        if (e.target.name === "password") {
+            const isFieldValid = e.target.value.length > 6;
+            console.log(isFieldValid);
         }
         if (isFieldValid) {
             const newUserInfo = { ...user };
             newUserInfo[e.target.name] = e.target.value;
-            setUser(newUserInfo);
+            setUser(newUserInfo)
         }
     }
     const handleSubmit = (e) => {
-        if (newUser && user.email && user.password) {
-            createUserWithEmailAndPassword(user.name, user.email, user.password)
+        if (newAccount && user.email && user.password) {
+            //   console.log("submit");
+            firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
                 .then(res => {
-                    handleResponse(res, true);
+                    const newUserInfo = { ...user };
+                    newUserInfo.error = '';
+                    setUser(newUserInfo)
+                    console.log(res);
                 })
-        }
-
-        if (!newUser && user.email && user.password) {
-            signInWithEmailAndPassword(user.email, user.password)
-                .then(res => {
-                    handleResponse(res, true);
-                })
+                .catch((error) => {
+                    var newUserInfo = { ...user };
+                    newUserInfo.error = error.message;
+                    setUser(newUserInfo)
+                });
         }
         e.preventDefault();
     }
-
+    if (!newAccount && user.email && user.password) {
+        firebase.auth().signInWithEmailAndPassword(user.email, user.password)
+            .then(res => {
+                const newUserInfo = { ...user };
+                    newUserInfo.error = '';
+                    setUser(newUserInfo)
+                    console.log(res);
+            })
+            .catch((error) => {
+                var newUserInfo = { ...user };
+                newUserInfo.error = error.message;
+                setUser(newUserInfo)
+            });
+    }
 
     return (
-        <div style={{ textAlign: 'center' }}>
-            <Header/>
-             <input type="checkbox" onChange={() => setNewUser(!newUser)} name="newUser" id="" />
-            <label htmlFor="newUser">New User Sign up</label>
-            <form onSubmit={handleSubmit}>
-                {newUser && <input name="name" type="text" onBlur={handleBlur} placeholder="Your name" />}
-                <br />
-                <input type="text" name="email" onBlur={handleBlur} placeholder="Your Email address" required />
-                <br />
-                <input type="password" name="password" onBlur={handleBlur} placeholder="Your Password" required />
-                <br />
-                <input type="submit" value={newUser ? 'Sign up' : 'Sign in'} />
-            </form>
-            <p style={{ color: 'red' }}>{user.error}</p>
-            { user.success && <p style={{ color: 'green' }}>User {newUser ? 'created' : 'Logged In'} successfully</p>}
-            { user.isSignedIn ? <button onClick={signOut}>Sign Out</button> :
-                <button onClick={googleSignIn}>Sign in with Google</button>
-            }
-            <br />
-            {user.isSignedIn ? <button onClick={signOut}>Sign Out</button> :
-            <button onClick={fbSignIn}>Sign in with Facebook</button>}
+        <div>
+            <Header />
+            <div style={{ textAlign: 'center' }}>
+                {/* <h5>Email : {user.email}</h5>
+                <h5>Nmae :{user.name}</h5> */}
+                <form onSubmit={handleSubmit}>
+                    {newAccount ? <h3>Create new account</h3> : <h3>Log in</h3>}
+                    {newAccount && <input className="form-input" name="name" type="text" onBlur={handleBlur} placeholder="Enter your name" />}
+                    <br />
+                    <input className="form-input" name="email" onBlur={handleBlur} type="email" required placeholder="Enter your email" />
+                    <br />
+                    <input className="form-input" name="password" onBlur={handleBlur} type="password" required placeholder="Enter your password" />
+                    <br />
+                    {newAccount? <input className="signIn-btn" type="submit" value="Sign up" /> :<input className="signIn-btn" type="submit" value="Sign in" /> }
+                </form>
+                <input type="checkbox" onChange={() => setNewAccount(!newAccount)} name="newAccount" />
+                <label htmlFor="newAccount">Don't have account</label>
+                <p style={{ color: 'red' }}>{user.error}</p>
+
+
+
+
+
+
+
+                <button className="fb-signin" onClick={handleFacebookSignIn}>Sign in with FaceBook</button>
+            </div>
         </div>
     );
-}
+};
 
 export default Login;
-
-
