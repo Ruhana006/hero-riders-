@@ -30,3 +30,9 @@
 .google-signin{
     background-color: rgb(6, 171, 89);
 }
+form h3{
+    color: rgb(49, 150, 212);
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
+    margin-top: 10px;
+}

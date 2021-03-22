@@ -1,0 +1,16 @@
+.link{
+    font-size: 18px;
+    padding: 10px;
+    text-decoration: none;
+    margin: 5px;
+    font-family: 'Courier New', Courier, monospace;
+}
+.link:hover{
+   background-color: grey;
+}
+.brand h3{
+    color: rgb(6, 105, 166);
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
+    font-size: 30px;
+}

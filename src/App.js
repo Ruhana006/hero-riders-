@@ -15,6 +15,7 @@ import Destination from './components/Destination/Destination';
 import { createContext } from 'react';
 import { useState } from 'react';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
+import DestinationDetails from './components/DestinationDetails/DestinationDetails';
 
 
 export const UserContext = createContext();
@@ -23,7 +24,6 @@ function App() {
   const [loggedInUser,setLoggedInUser]= useState({});
   return (
     <UserContext.Provider value ={[loggedInUser, setLoggedInUser]}>
-      
       <Router>
         <Switch>
           <Route path = "/home">
@@ -35,8 +35,11 @@ function App() {
           <Route path="/login">
             <Login/>
           </Route>
-          <PrivateRoute path="/destination">
+          <PrivateRoute path="/destination/:id">
             <Destination/>
+          </PrivateRoute>
+          <PrivateRoute>
+            <DestinationDetails/>
           </PrivateRoute>
         </Switch>
       </Router>

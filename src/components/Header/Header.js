@@ -1,24 +1,30 @@
 import React from 'react';
-import { Navbar, Nav,Button } from "react-bootstrap"
+import { useContext } from 'react';
+import { useState } from 'react';
+import { Navbar,Nav,Button } from "react-bootstrap"
 import { useHistory } from 'react-router';
+import {Link } from 'react-router-dom';
+import { UserContext } from '../../App';
 import Login from '../Login/Login';
+import './Header.css'
 
 const Header = () => {
     const history = useHistory()
     const handleLogin = () =>{
-       history.push("/login")
+       history.push("/destination")
     }
     return (
-        <div>
+        <div >
              <Navbar className="container" bg="light" expand="lg">
-                <Navbar.Brand className="mr-auto" href="#home">Urban Riders</Navbar.Brand>
+                <Navbar.Brand className="mr-auto brand" href="#home"><h3>Hero Riders</h3></Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ml-auto">
-                        <Nav.Link href="/home">Home</Nav.Link>
-                        <Nav.Link href="/destination">Destinaton</Nav.Link>
-                        <Nav.Link href="/blog">Blog</Nav.Link>
-                        <Button onClick={()=>handleLogin()} className="loginBtn" variant="outline-success">Log in</Button>
+                        <Link to="/home" className="link">Home</Link>
+                        <Link to="/destination" className="link">Destinaton</Link>
+                        <Link to="/blog" className="link">Blog</Link>
+                        <Link to ="/details" className="link">Details</Link>
+                        <button  onClick={()=>handleLogin()}  className="btn btn-primary btn-lg">Log in</button>
                     </Nav>    
                 </Navbar.Collapse>
             </Navbar>

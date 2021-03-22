@@ -1,0 +1,16 @@
+.search-input{
+    margin-top: 20px;
+    border-radius: 5px;
+    width: 40%;
+    padding: 10px;
+}
+.search-btn{
+    margin-top: 20px;
+    border-radius: 5px;
+    width:40%;
+    padding: 10px;
+    background-color:salmon ;
+    border: none;
+    color: white;
+    font-weight: 700;
+}
