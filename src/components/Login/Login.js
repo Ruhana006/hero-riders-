@@ -118,7 +118,7 @@ const Login = () => {
     return (
         <div>
             <Header />
-            <div style={{ textAlign: 'center' }}>
+            <div className="background" style={{ textAlign: 'center' }}>
                 <form onSubmit={handleSubmit}>
                     {newAccount ? <h3>Create new account</h3> : <h3>Log in</h3>}
                     {newAccount && <input className="form-input" name="name" type="text" onBlur={handleBlur} placeholder="Enter your name" />}

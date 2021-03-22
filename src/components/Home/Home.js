@@ -5,7 +5,7 @@ import Header from '../Header/Header';
 import Data from '../../FakeData/Data.json'
 import Vehicle from '../Vehicle/Vehicle';
 import { useHistory } from 'react-router';
-
+import './Home.css'
 
 const Home = () => {
     const [types, setTypes] = useState([]);
@@ -17,7 +17,7 @@ const Home = () => {
     return (
         <div>
             <Header />
-                <div className="row">
+                <div className="row background">
                     {
                         types.map(type => <Vehicle type={type}></Vehicle>)
                     }
