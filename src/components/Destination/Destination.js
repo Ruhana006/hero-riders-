@@ -6,9 +6,7 @@ import Data from "../../FakeData/Data.json"
 import { useHistory, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import DestinationDetails from '../DestinationDetails/DestinationDetails';
 import mapImg from '../../image/Map.png'
-
 const Destination = (props) => {
 
     const { register, watch, errors } = useForm();
@@ -24,9 +22,9 @@ const Destination = (props) => {
     return (
         <section>
             <Header></Header>
-            <div className="container background">
+            <div className="container-fluid background">
                 <div className="row">
-                    <div className="col-md-7">
+                    <div className="col-md-12">
                         <form onSubmit={handleSearch}>
                             <input className="search-input" type="text" name="from" placeholder="Place From" ref={register({ required: true })} />
                             {errors.exampleRequired && <span>This field is required</span>}
@@ -39,9 +37,6 @@ const Destination = (props) => {
                             <br />
                             <button className="search-btn">Search Here</button>
                         </form>
-                    </div>
-                    <div className="col-md-5">
-                        <img  src={mapImg} alt=""></img>
                     </div>
                 </div>
             </div>

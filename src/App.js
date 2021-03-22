@@ -16,6 +16,7 @@ import { createContext } from 'react';
 import { useState } from 'react';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import DestinationDetails from './components/DestinationDetails/DestinationDetails';
+import Nomatch from './NoMatch/NoMathch'
 
 
 export const UserContext = createContext();
@@ -34,6 +35,9 @@ function App() {
           </Route>
           <Route path="/login">
             <Login/>
+          </Route>
+          <Route path = '*'>
+            <NoMatch></NoMatch>
           </Route>
           <PrivateRoute path="/destination/:id">
             <Destination/>
